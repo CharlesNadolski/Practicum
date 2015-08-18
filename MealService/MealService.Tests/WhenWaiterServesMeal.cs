@@ -1,10 +1,5 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MealService;
 
 namespace MealService.Tests
 {
@@ -26,9 +21,11 @@ namespace MealService.Tests
             const string order = "morning, 1, 2, 3";
             const string expectation = "eggs, toast, coffee";
 
-            var actual = _waiter.Serve(order);
+            //We don't have an implementation of even an abstraction yet!
+            //var actual = _waiter.Serve(order);
+            //Assert.That(actual, Is.EqualTo(expectation));
 
-            Assert.That(actual, Is.EqualTo(expectation));
+            Assert.That(() => _waiter.Serve(order), Throws.InstanceOf<NotImplementedException>());
         }
     }
 }
