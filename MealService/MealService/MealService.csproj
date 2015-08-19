@@ -43,8 +43,12 @@
   <ItemGroup>
     <Compile Include="DishDto.cs" />
     <Compile Include="IDishDto.cs" />
+    <Compile Include="IOrder.cs" />
+    <Compile Include="IOrderFactory.cs" />
     <Compile Include="IReferenceData.cs" />
     <Compile Include="IWaiter.cs" />
+    <Compile Include="Order.cs" />
+    <Compile Include="OrderFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceData.cs" />
