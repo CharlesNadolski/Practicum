@@ -5,6 +5,6 @@ namespace MealService
     public interface IReferenceData
     {
         void Load(string xmlPath);
-        IDictionary<int, IDictionary<string, string>> Dishes { get; }
+        IDictionary<int, IDish> Dishes { get; }
     }
 }

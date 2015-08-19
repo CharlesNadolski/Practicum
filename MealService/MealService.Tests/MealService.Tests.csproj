@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="MoqTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WhenDishIsCreated.cs" />
     <Compile Include="WhenOrderIsCreated.cs" />
     <Compile Include="WhenProgramIsExecuted.cs" />
     <Compile Include="WhenReferenceDataIsUsed.cs" />

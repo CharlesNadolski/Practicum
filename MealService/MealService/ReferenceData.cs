@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -8,13 +7,13 @@ namespace MealService
 {
     internal class ReferenceData : IReferenceData
     {
-        /// <summary>
-        /// The text fields of DishDto represent the times of day that we have meals
-        /// </summary>
-        private static readonly PropertyInfo[] TimeOfDayProperties =
-            typeof(DishDto).GetProperties().Where(property => property.PropertyType == typeof(string)).ToArray();
+        private Dictionary<int, IDish> _dishes = new Dictionary<int, IDish>();
+        private IDishFactory _dishFactory;
 
-        private Dictionary<int, IDictionary<string, string>> _dishes = new Dictionary<int, IDictionary<string, string>>();
+        public ReferenceData(IDishFactory dishFactory)
+        {
+            _dishFactory = dishFactory;
+        }
 
         public void Load(string xmlPath)
         {
@@ -22,28 +21,11 @@ namespace MealService
             {
                 var serializer = new XmlSerializer(typeof(DishDto[]));
                 var dishDtos = (DishDto[])serializer.Deserialize(xmlReader);
-                foreach(var dishDto in dishDtos)
-                {
-                    IDictionary<string, string> dishEntry;
-                    if (!_dishes.TryGetValue(dishDto.DishType, out dishEntry))
-                    {
-                        dishEntry = new Dictionary<string, string>();
-                        _dishes.Add(dishDto.DishType, dishEntry);
-                    }
-
-                    foreach (var propertyInfo in TimeOfDayProperties)
-                    {
-                        var dishTimeValue = (string)propertyInfo.GetValue(dishDto);
-                        if (!string.IsNullOrWhiteSpace(dishTimeValue))
-                        {
-                            dishEntry.Add(propertyInfo.Name, dishTimeValue);
-                        }
-                    }
-                }
+                _dishes = dishDtos.ToDictionary(dto => dto.DishType, _dishFactory.Transform);
             }
         }
 
-        public IDictionary<int, IDictionary<string, string>> Dishes
+        public IDictionary<int, IDish> Dishes
         {
             get { return _dishes; }
         }

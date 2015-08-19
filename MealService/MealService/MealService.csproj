@@ -42,7 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Dish.cs" />
+    <Compile Include="DishDescripionDto.cs" />
     <Compile Include="DishDto.cs" />
+    <Compile Include="DishFactory.cs" />
+    <Compile Include="IDish.cs" />
+    <Compile Include="IDishDto.cs" />
+    <Compile Include="IDishFactory.cs" />
     <Compile Include="IOrder.cs" />
     <Compile Include="IOrderFactory.cs" />
     <Compile Include="IReferenceData.cs" />

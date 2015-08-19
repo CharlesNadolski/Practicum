@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
+﻿using Moq;
+using NUnit.Framework;
 using System.IO;
 
 namespace MealService.Tests
@@ -12,16 +12,24 @@ namespace MealService.Tests
         private const string DishData = @"<ArrayOfDishDto>
   <DishDto>
     <DishType>1</DishType>
-    <morning>eggs</morning>
-    <night>steak</night>
+    <morning>
+      <Name>eggs</Name>
+      <AllowMultiple>true</AllowMultiple>
+    </morning>
+    <night>
+      <Name>steak</Name>
+      <AllowMultiple>false</AllowMultiple>
+    </night>
   </DishDto>
 </ArrayOfDishDto>";
         private string _tempPath;
+        private Mock<IDishFactory> _dishFactory;
 
         [SetUp]
         public void SetUp()
         {
-            _referenceData = new ReferenceData();
+            _dishFactory = CreateMock<IDishFactory>();
+            _referenceData = new ReferenceData(_dishFactory.Object);
             _tempPath = Path.GetTempFileName();
             File.WriteAllText(_tempPath, DishData);
         }
@@ -35,11 +43,15 @@ namespace MealService.Tests
         [Test]
         public void XmlCanBeReadThroughDishInterface()
         {
+            var mockDish1 = CreateMock<IDish>();
+            _dishFactory.Setup(factory => factory.Transform(
+                It.Is<IDishDto>(dto => dto.DishType == 1 && dto.morning.Name == "eggs" && dto.morning.AllowMultiple &&
+                                                            dto.night.Name == "steak" && !dto.night.AllowMultiple)))
+                .Returns(mockDish1.Object);
+            
             _referenceData.Load(_tempPath);
 
-            Assert.That(_referenceData.Dishes[1]["morning"], Is.EqualTo("eggs"));
-            Assert.That(_referenceData.Dishes[1]["night"], Is.EqualTo("steak"));
-            Assert.That(_referenceData.Dishes[1], Is.Not.Contains("SomeRandomTime"));
+            Assert.That(_referenceData.Dishes[1], Is.EqualTo(mockDish1.Object));
         }
     }
 }

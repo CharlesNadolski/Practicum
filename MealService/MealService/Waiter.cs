@@ -37,10 +37,10 @@ namespace MealService
                 {
                     meal.Append(Constants.DishSeparator);
                 }
-                IDictionary<string, string> matchingDish;
+                IDish matchingDish;
                 string dishName;
                 if (_referenceData.Dishes.TryGetValue(dishType, out matchingDish) &&
-                    matchingDish.TryGetValue(parsedOrder.TimeOfDay, out dishName))
+                    matchingDish.NameAtMealTime.TryGetValue(parsedOrder.TimeOfDay, out dishName))
                 {
                     meal.Append(dishName);
                 }

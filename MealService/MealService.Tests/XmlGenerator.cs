@@ -18,10 +18,30 @@ namespace MealService.Tests
         {
             var dishes = new DishDto[]
             {
-                new DishDto { DishType = 1, morning = "eggs", night = "steak" },
-                new DishDto { DishType = 2, morning = "toast", night = "potato" },
-                new DishDto { DishType = 3, morning = "coffee", night = "wine" },
-                new DishDto { DishType = 4, morning = null, night = "cake" }
+                new DishDto
+                {
+                    DishType = 1,
+                    morning = new DishDescripionDto { Name = "eggs", AllowMultiple = false },
+                    night =  new DishDescripionDto { Name = "steak", AllowMultiple = false }
+                },
+                new DishDto
+                {
+                    DishType = 2,
+                    morning = new DishDescripionDto { Name = "toast", AllowMultiple = false },
+                    night = new DishDescripionDto { Name = "potato", AllowMultiple = true }
+                },
+                new DishDto
+                {
+                    DishType = 3,
+                    morning = new DishDescripionDto { Name = "coffee", AllowMultiple = true },
+                    night = new DishDescripionDto { Name = "wine", AllowMultiple = false }
+                },
+                new DishDto
+                {
+                    DishType = 4,
+                    morning = null,
+                    night = new DishDescripionDto { Name = "cake", AllowMultiple = false }
+                }
             };
 
             var stringWriter = new StringWriter();
