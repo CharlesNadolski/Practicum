@@ -41,8 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="DishDto.cs" />
-    <Compile Include="IDishDto.cs" />
     <Compile Include="IOrder.cs" />
     <Compile Include="IOrderFactory.cs" />
     <Compile Include="IReferenceData.cs" />

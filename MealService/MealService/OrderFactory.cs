@@ -7,10 +7,11 @@ namespace MealService
     {
         public IOrder Parse(string inputOrder)
         {
-            var orderArguments = inputOrder.Split(new[] { ", " }, StringSplitOptions.None);
+            var orderArguments = inputOrder.Split(new[] { Constants.DishSeparator }, StringSplitOptions.None);
             return new Order(
                 orderArguments[0],
-                orderArguments.Skip(1).Select(arg => int.Parse(arg)));
+                //Dish types must always be ascending order.
+                orderArguments.Skip(1).Select(arg => int.Parse(arg)).OrderBy(key => key));
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MealService
 {
     public interface IReferenceData
     {
         void Load(string xmlPath);
-        IReadOnlyCollection<IDishDto> Dishes { get; }
+        IDictionary<int, IDictionary<string, string>> Dishes { get; }
     }
 }

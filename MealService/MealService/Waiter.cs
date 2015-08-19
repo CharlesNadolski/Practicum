@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 
 namespace MealService
 {
@@ -23,8 +25,31 @@ namespace MealService
         /// <returns>String representation of a meal.</returns>
         public string Serve(string inputOrder)
         {
+            var meal = new StringBuilder();
             var parsedOrder = _orderFactory.Parse(inputOrder);
-            throw new NotImplementedException();
+            var firstDish = true;
+            foreach(var dishType in parsedOrder.DishTypes)
+            {
+                if (firstDish)
+                {
+                    firstDish = false;
+                }
+                else
+                {
+                    meal.Append(Constants.DishSeparator);
+                }
+                var matchingDish = _referenceData.Dishes[dishType];
+                string dishName;
+                if (matchingDish.TryGetValue(parsedOrder.TimeOfDay, out dishName))
+                {
+                    meal.Append(dishName);
+                }
+                else
+                {
+                    meal.Append("error");
+                }
+            }
+            return meal.ToString();
         }
     }
 }

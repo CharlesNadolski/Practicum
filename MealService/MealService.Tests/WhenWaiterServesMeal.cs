@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace MealService.Tests
 {
@@ -25,17 +26,33 @@ namespace MealService.Tests
         [Test]
         public void OrderIsTakenAndMealIsReturned()
         {
-            const string order = "morning, 1, 2, 3";
+            const string inputOrder = "morning, 1, 2, 3";
             const string expectation = "eggs, toast, coffee";
 
             var mockOrder = CreateMock<IOrder>();
-            _mockOrderFactory.Setup(factory => factory.Parse(order)).Returns(mockOrder.Object);
+            _mockOrderFactory.Setup(factory => factory.Parse(inputOrder)).Returns(mockOrder.Object);
+            mockOrder.SetupGet(order => order.TimeOfDay).Returns("morning");
+            mockOrder.SetupGet(order => order.DishTypes).Returns(new[] { 1, 2, 3 });
 
-            //We don't have a full implementation yet!
-            //var actual = _waiter.Serve(order);
-            //Assert.That(actual, Is.EqualTo(expectation));
+            var mockDishes = CreateMock<IDictionary<int, IDictionary<string, string>>>();
+            _mockReferenceData.Setup(references => references.Dishes).Returns(mockDishes.Object);
 
-            Assert.That(() => _waiter.Serve(order), Throws.InstanceOf<NotImplementedException>());
+            var mockDish1 = CreateMock<IDictionary<string, string>>();
+            string eggs = "eggs";
+            mockDish1.Setup(dish => dish.TryGetValue("morning", out eggs)).Returns(true);
+            var mockDish2 = CreateMock<IDictionary<string, string>>();
+            string toast = "toast";
+            mockDish2.Setup(dish => dish.TryGetValue("morning", out toast)).Returns(true);
+            var mockDish3 = CreateMock<IDictionary<string, string>>();
+            string coffee = "coffee";
+            mockDish3.Setup(dish => dish.TryGetValue("morning", out coffee)).Returns(true);
+            mockDishes.Setup(dishes => dishes[1]).Returns(mockDish1.Object);
+            mockDishes.Setup(dishes => dishes[2]).Returns(mockDish2.Object);
+            mockDishes.Setup(dishes => dishes[3]).Returns(mockDish3.Object);
+
+            var actual = _waiter.Serve(inputOrder);
+
+            Assert.That(actual, Is.EqualTo(expectation));
         }
     }
 }

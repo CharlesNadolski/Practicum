@@ -1,11 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace MealService.Tests
@@ -23,10 +18,10 @@ namespace MealService.Tests
         {
             var dishes = new DishDto[]
             {
-                new DishDto { DishType = 1, MorningDish = "eggs", EveningDish = "steak" },
-                new DishDto { DishType = 2, MorningDish = "Toast", EveningDish = "potato" },
-                new DishDto { DishType = 3, MorningDish = "coffee", EveningDish = "wine" },
-                new DishDto { DishType = 4, MorningDish = null, EveningDish = "cake" }
+                new DishDto { DishType = 1, morning = "eggs", night = "steak" },
+                new DishDto { DishType = 2, morning = "toast", night = "potato" },
+                new DishDto { DishType = 3, morning = "coffee", night = "wine" },
+                new DishDto { DishType = 4, morning = null, night = "cake" }
             };
 
             var stringWriter = new StringWriter();

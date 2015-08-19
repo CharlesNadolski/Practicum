@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace MealService.Tests
 {
@@ -12,8 +12,8 @@ namespace MealService.Tests
         private const string DishData = @"<ArrayOfDishDto>
   <DishDto>
     <DishType>1</DishType>
-    <MorningDish>eggs</MorningDish>
-    <EveningDish>steak</EveningDish>
+    <morning>eggs</morning>
+    <night>steak</night>
   </DishDto>
 </ArrayOfDishDto>";
         private string _tempPath;
@@ -37,11 +37,9 @@ namespace MealService.Tests
         {
             _referenceData.Load(_tempPath);
 
-            var dish = _referenceData.Dishes.Single();
-
-            Assert.That(dish.DishType, Is.EqualTo(1));
-            Assert.That(dish.MorningDish, Is.EqualTo("eggs"));
-            Assert.That(dish.EveningDish, Is.EqualTo("steak"));
+            Assert.That(_referenceData.Dishes[1]["morning"], Is.EqualTo("eggs"));
+            Assert.That(_referenceData.Dishes[1]["night"], Is.EqualTo("steak"));
+            Assert.That(_referenceData.Dishes[1], Is.Not.Contains("SomeRandomTime"));
         }
     }
 }
