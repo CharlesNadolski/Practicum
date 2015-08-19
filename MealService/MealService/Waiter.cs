@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MealService
 {
     internal class Waiter : IWaiter
     {
         private IReferenceData _referenceData;
+        private IOrderFactory _orderFactory;
 
-        public Waiter(IReferenceData referenceData)
+        public Waiter(IReferenceData referenceData, IOrderFactory orderFactory)
         {
             _referenceData = referenceData;
             _referenceData.Load("ReferenceData.xml");
+            _orderFactory = orderFactory;
         }
 
         /// <summary>
@@ -21,10 +19,11 @@ namespace MealService
         /// It acts as a facade and encapsulates all the underlying business logic in a simple
         /// to use interface.
         /// </summary>
-        /// <param name="order">String representation of an order.</param>
+        /// <param name="inputOrder">String representation of an order.</param>
         /// <returns>String representation of a meal.</returns>
-        public string Serve(string order)
+        public string Serve(string inputOrder)
         {
+            var parsedOrder = _orderFactory.Parse(inputOrder);
             throw new NotImplementedException();
         }
     }

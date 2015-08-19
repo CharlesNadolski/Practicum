@@ -7,7 +7,7 @@ namespace MealService
 
         static Program()
         {
-            _waiter = new Waiter(new ReferenceData());
+            _waiter = new Waiter(new ReferenceData(), new OrderFactory());
         }
 
         static void Main(string[] args)
