@@ -1,11 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MealService.Tests
 {
@@ -92,7 +87,6 @@ namespace MealService.Tests
         }
 
         [Test]
-        [Ignore("Ignored until implementation is complete")]
         public void DinnerIsReturnedWithErrorDueToUnknownDish()
         {
             var meal = RunProgramAndReturnOutput("night, 1, 2, 3, 5");

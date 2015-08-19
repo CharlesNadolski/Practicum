@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace MealService
@@ -38,9 +37,10 @@ namespace MealService
                 {
                     meal.Append(Constants.DishSeparator);
                 }
-                var matchingDish = _referenceData.Dishes[dishType];
+                IDictionary<string, string> matchingDish;
                 string dishName;
-                if (matchingDish.TryGetValue(parsedOrder.TimeOfDay, out dishName))
+                if (_referenceData.Dishes.TryGetValue(dishType, out matchingDish) &&
+                    matchingDish.TryGetValue(parsedOrder.TimeOfDay, out dishName))
                 {
                     meal.Append(dishName);
                 }
