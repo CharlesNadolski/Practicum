@@ -7,6 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealService", "MealService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealService.Tests", "MealService.Tests\MealService.Tests.csproj", "{869F5B54-1B90-4D37-A12F-F702D2208B22}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommandLineBuildAndTest", "CommandLineBuildAndTest", "{33EF6206-375C-4400-9DAC-782B00671212}"
+	ProjectSection(SolutionItems) = preProject
+		BuildAndTest.bat = BuildAndTest.bat
+		nunit-agent.exe = nunit-agent.exe
+		nunit-console-runner.dll = nunit-console-runner.dll
+		nunit-console.exe = nunit-console.exe
+		nunit.core.dll = nunit.core.dll
+		nunit.core.interfaces.dll = nunit.core.interfaces.dll
+		nunit.util.dll = nunit.util.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

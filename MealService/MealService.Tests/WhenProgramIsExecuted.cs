@@ -64,7 +64,6 @@ namespace MealService.Tests
         }
 
         [Test]
-        [Ignore("Ignored until implementation is complete")]
         public void BreakfastIsReturnedWithExtraCoffee()
         {
             var meal = RunProgramAndReturnOutput("morning, 1, 2, 3, 3, 3");
@@ -79,7 +78,6 @@ namespace MealService.Tests
         }
 
         [Test]
-        [Ignore("Ignored until implementation is complete")]
         public void DinnerIsReturnedWithExtraSpuds()
         {
             var meal = RunProgramAndReturnOutput("night, 1, 2, 2, 4");
@@ -94,7 +92,6 @@ namespace MealService.Tests
         }
 
         [Test]
-        [Ignore("Ignored until implementation is complete")]
         public void DinnerIsReturnedWithErrorDueToTooMuchSteak()
         {
             var meal = RunProgramAndReturnOutput("night, 1, 1, 2, 3, 5");

@@ -18,6 +18,9 @@ namespace MealService.Tests
         private Mock<IDictionary<string, string>> _mockNameAtMealTime1;
         private Mock<IDictionary<string, string>> _mockNameAtMealTime2;
         private Mock<IDictionary<string, string>> _mockNameAtMealTime3;
+        private Mock<IDictionary<string, bool>> _mockMultipleAtMealTime1;
+        private Mock<IDictionary<string, bool>> _mockMultipleAtMealTime2;
+        private Mock<IDictionary<string, bool>> _mockMultipleAtMealTime3;
 
         [SetUp]
         public void SetUp()
@@ -34,9 +37,13 @@ namespace MealService.Tests
             _mockNameAtMealTime1 = CreateMock<IDictionary<string, string>>();
             _mockNameAtMealTime2 = CreateMock<IDictionary<string, string>>();
             _mockNameAtMealTime3 = CreateMock<IDictionary<string, string>>();
+            _mockMultipleAtMealTime1 = CreateMock<IDictionary<string, bool>>();
+            _mockMultipleAtMealTime2 = CreateMock<IDictionary<string, bool>>();
+            _mockMultipleAtMealTime3 = CreateMock<IDictionary<string, bool>>();
+
             _mockDish1.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime1.Object);
-            _mockDish2.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime2.Object);
-            _mockDish3.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime3.Object);
+            _mockDish1.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime1.Object);
+
             _dishes[1] = _mockDish1.Object;
             _dishes[2] = _mockDish2.Object;
             _dishes[3] = _mockDish3.Object;
@@ -55,6 +62,9 @@ namespace MealService.Tests
             mockOrder.SetupGet(order => order.TimeOfDay).Returns("morning");
             mockOrder.SetupGet(order => order.DishTypes).Returns(new[] { 1, 2, 3 });
 
+            _mockDish2.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime3.Object);
+
             string eggs = "eggs";
             _mockNameAtMealTime1.Setup(dic => dic.TryGetValue("morning", out eggs)).Returns(true);
             string toast = "toast";
@@ -62,7 +72,13 @@ namespace MealService.Tests
             string coffee = "coffee";
             _mockNameAtMealTime3.Setup(dic => dic.TryGetValue("morning", out coffee)).Returns(true);
 
+            _mockDish2.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime3.Object);
 
+            _mockMultipleAtMealTime1.SetupGet(dic => dic["morning"]).Returns(false);
+            _mockMultipleAtMealTime2.SetupGet(dic => dic["morning"]).Returns(false);
+            _mockMultipleAtMealTime3.SetupGet(dic => dic["morning"]).Returns(true);
+            
             var actual = _waiter.Serve(inputOrder);
 
             Assert.That(actual, Is.EqualTo(expectation));
@@ -79,6 +95,9 @@ namespace MealService.Tests
             mockOrder.SetupGet(order => order.TimeOfDay).Returns("morning");
             mockOrder.SetupGet(order => order.DishTypes).Returns(new[] { 1, 2, 3, 4 });
 
+            _mockDish2.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime3.Object);
+
             string eggs = "eggs";
             _mockNameAtMealTime1.Setup(dic => dic.TryGetValue("morning", out eggs)).Returns(true);
             string toast = "toast";
@@ -91,6 +110,13 @@ namespace MealService.Tests
             string notApplicable = null;
             mockNameAtMealTime4.Setup(dic => dic.TryGetValue("morning", out notApplicable)).Returns(false);
             _dishes[4] = mockDish4.Object;
+
+            _mockDish2.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime3.Object);
+
+            _mockMultipleAtMealTime1.SetupGet(dic => dic["morning"]).Returns(false);
+            _mockMultipleAtMealTime2.SetupGet(dic => dic["morning"]).Returns(false);
+            _mockMultipleAtMealTime3.SetupGet(dic => dic["morning"]).Returns(true);
 
             var actual = _waiter.Serve(inputOrder);
 
@@ -109,12 +135,77 @@ namespace MealService.Tests
             mockOrder.SetupGet(order => order.TimeOfDay).Returns("night");
             mockOrder.SetupGet(order => order.DishTypes).Returns(new[] { 1, 2, 3, 5 });
 
+            _mockDish2.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime3.Object);
+
             string steak = "steak";
             _mockNameAtMealTime1.Setup(dic => dic.TryGetValue("night", out steak)).Returns(true);
             string potato = "potato";
             _mockNameAtMealTime2.Setup(dic => dic.TryGetValue("night", out potato)).Returns(true);
             string wine = "wine";
             _mockNameAtMealTime3.Setup(dic => dic.TryGetValue("night", out wine)).Returns(true);
+
+            _mockDish2.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime3.Object);
+
+            _mockMultipleAtMealTime1.SetupGet(dic => dic["night"]).Returns(false);
+            _mockMultipleAtMealTime2.SetupGet(dic => dic["night"]).Returns(true);
+            _mockMultipleAtMealTime3.SetupGet(dic => dic["night"]).Returns(false);
+
+            var actual = _waiter.Serve(inputOrder);
+
+            Assert.That(actual, Is.EqualTo(expectation));
+        }
+
+        [Test]
+        public void DuplicateDishReturnsError()
+        {
+            const string inputOrder = "night, 1, 1, 2, 3, 5";
+            const string expectation = "steak, error";
+
+            var mockOrder = CreateMock<IOrder>();
+            _mockOrderFactory.Setup(factory => factory.Parse(inputOrder)).Returns(mockOrder.Object);
+            mockOrder.SetupGet(order => order.TimeOfDay).Returns("night");
+            mockOrder.SetupGet(order => order.DishTypes).Returns(new[] { 1, 1, 2, 3, 5 });
+
+            string steak = "steak";
+            _mockNameAtMealTime1.Setup(dic => dic.TryGetValue("night", out steak)).Returns(true);
+
+            _mockMultipleAtMealTime1.SetupGet(dic => dic["night"]).Returns(false);
+
+            var actual = _waiter.Serve(inputOrder);
+
+            Assert.That(actual, Is.EqualTo(expectation));
+        }
+
+
+        [Test]
+        public void DuplicateDishGetsMerged()
+        {
+            const string inputOrder = "morning, 1, 2, 3, 3, 3";
+            const string expectation = "eggs, toast, coffee(x3)";
+
+            var mockOrder = CreateMock<IOrder>();
+            _mockOrderFactory.Setup(factory => factory.Parse(inputOrder)).Returns(mockOrder.Object);
+            mockOrder.SetupGet(order => order.TimeOfDay).Returns("morning");
+            mockOrder.SetupGet(order => order.DishTypes).Returns(new[] { 1, 2, 3, 3, 3 });
+
+            _mockDish2.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.NameAtMealTime).Returns(_mockNameAtMealTime3.Object);
+
+            string eggs = "eggs";
+            _mockNameAtMealTime1.Setup(dic => dic.TryGetValue("morning", out eggs)).Returns(true);
+            string toast = "toast";
+            _mockNameAtMealTime2.Setup(dic => dic.TryGetValue("morning", out toast)).Returns(true);
+            string coffee = "coffee";
+            _mockNameAtMealTime3.Setup(dic => dic.TryGetValue("morning", out coffee)).Returns(true);
+
+            _mockDish2.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime2.Object);
+            _mockDish3.SetupGet(dish => dish.MultipleAtMealTime).Returns(_mockMultipleAtMealTime3.Object);
+
+            _mockMultipleAtMealTime1.SetupGet(dic => dic["morning"]).Returns(false);
+            _mockMultipleAtMealTime2.SetupGet(dic => dic["morning"]).Returns(false);
+            _mockMultipleAtMealTime3.SetupGet(dic => dic["morning"]).Returns(true);
 
             var actual = _waiter.Serve(inputOrder);
 
