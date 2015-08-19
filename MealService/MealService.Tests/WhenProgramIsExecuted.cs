@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ namespace MealService.Tests
     /// </summary>
     [TestFixture]
     [Category("IntegrationTest")]
-    [Ignore("Ignored until implementation is complete")]
     public class WhenProgramIsExecuted
     {
         /// <summary>
@@ -23,13 +23,28 @@ namespace MealService.Tests
 
         private static string RunProgramAndReturnOutput(string input)
         {
-            var mealService = new Process { StartInfo = new ProcessStartInfo("MealService.exe", input) };
-            var output = mealService.StandardOutput;
+            //Emulate user input at the console by redirecting console input and output
+            var startInfo = new ProcessStartInfo("MealService.exe")
+            {
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
+            var mealService = new Process { StartInfo = startInfo };
 
             mealService.Start();
 
+            mealService.StandardInput.WriteLine(input);
+            //Terminate the console as the user would
+            mealService.StandardInput.WriteLine("exit");
+            var output = mealService.StandardOutput.ReadToEnd();
+
+            //Sanity check
             Assert.That(mealService.WaitForExit(MillisecondTimeout), Is.True);
-            return output.ReadToEnd();
+
+            //Remove the instruction and echo output
+            var lines = output.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            return lines[2];
         }
 
         [Test]
@@ -54,6 +69,7 @@ namespace MealService.Tests
         }
 
         [Test]
+        [Ignore("Ignored until implementation is complete")]
         public void BreakfastIsReturnedWithExtraCoffee()
         {
             var meal = RunProgramAndReturnOutput("morning, 1, 2, 3, 3, 3");
@@ -68,6 +84,7 @@ namespace MealService.Tests
         }
 
         [Test]
+        [Ignore("Ignored until implementation is complete")]
         public void DinnerIsReturnedWithExtraSpuds()
         {
             var meal = RunProgramAndReturnOutput("night, 1, 2, 2, 4");
@@ -75,6 +92,7 @@ namespace MealService.Tests
         }
 
         [Test]
+        [Ignore("Ignored until implementation is complete")]
         public void DinnerIsReturnedWithErrorDueToUnknownDish()
         {
             var meal = RunProgramAndReturnOutput("night, 1, 2, 3, 5");
@@ -82,6 +100,7 @@ namespace MealService.Tests
         }
 
         [Test]
+        [Ignore("Ignored until implementation is complete")]
         public void DinnerIsReturnedWithErrorDueToTooMuchSteak()
         {
             var meal = RunProgramAndReturnOutput("night, 1, 1, 2, 3, 5");

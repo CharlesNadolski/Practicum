@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace MealService
 {
     class Program
@@ -12,6 +13,14 @@ namespace MealService
 
         static void Main(string[] args)
         {
+            Console.WriteLine();
+            Console.WriteLine("Enter meal time and dish types.  Type 'exit' when done.");
+            var command = Console.ReadLine();
+            while (command != "exit")
+            {
+                Console.WriteLine(_waiter.Serve(command));
+                command = Console.ReadLine();
+            }
         }
     }
 }
