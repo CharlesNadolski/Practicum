@@ -1,18 +1,22 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 using System;
 
 namespace MealService.Tests
 {
     [TestFixture]
     [Category("UnitTest")]
-    public class WhenWaiterServesMeal
+    public class WhenWaiterServesMeal : MoqTestBase
     {
         private IWaiter _waiter;
+        private Mock<IReferenceData> _mockReferenceData;
 
         [SetUp]
         public void SetUp()
         {
-            _waiter = new Waiter();
+            _mockReferenceData = CreateMock<IReferenceData>();
+            _mockReferenceData.Setup(references => references.Load("ReferenceData.xml"));
+            _waiter = new Waiter(_mockReferenceData.Object);
         }
 
         [Test]

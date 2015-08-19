@@ -12,7 +12,7 @@ namespace MealService
 
         static Program()
         {
-            _waiter = new Waiter();
+            _waiter = new Waiter(new ReferenceData());
         }
 
         static void Main(string[] args)

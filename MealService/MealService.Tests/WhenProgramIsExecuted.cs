@@ -23,7 +23,7 @@ namespace MealService.Tests
 
         private static string RunProgramAndReturnOutput(string input)
         {
-            var mealService = new Process() { StartInfo = new ProcessStartInfo("MealService.exe", input) };
+            var mealService = new Process { StartInfo = new ProcessStartInfo("MealService.exe", input) };
             var output = mealService.StandardOutput;
 
             mealService.Start();

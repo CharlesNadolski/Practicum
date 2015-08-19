@@ -8,8 +8,18 @@ namespace MealService
 {
     internal class Waiter : IWaiter
     {
+        private IReferenceData _referenceData;
+
+        public Waiter(IReferenceData referenceData)
+        {
+            _referenceData = referenceData;
+            _referenceData.Load("ReferenceData.xml");
+        }
+
         /// <summary>
         /// Waiter takes an order then serves a meal.
+        /// It acts as a facade and encapsulates all the underlying business logic in a simple
+        /// to use interface.
         /// </summary>
         /// <param name="order">String representation of an order.</param>
         /// <returns>String representation of a meal.</returns>
